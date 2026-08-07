@@ -3,26 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - JudgeBox</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Log In</h1>
+<div class="container-narrow">
+    <div class="card">
+        <h1>Log In</h1>
 
-<p th:if="${param.error}" style="color: red;">Invalid username or password</p>
-<p th:if="${param.registered}" style="color: green;">Account created — please log in</p>
-<p th:if="${param.logout}" style="color: blue;">You've been logged out</p>
+        <p class="alert alert-error" th:if="${param.error}">Invalid username or password</p>
+        <p class="alert alert-success" th:if="${param.registered}">Account created — please log in</p>
+        <p class="alert alert-info" th:if="${param.logout}">You've been logged out</p>
 
-<form th:action="@{/login}" method="post">
-    <div>
-        <label>Username</label>
-        <input type="text" name="username" required>
+        <form class="auth-form" th:action="@{/login}" method="post">
+            <div class="field">
+                <label>Username</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%;">Log In</button>
+        </form>
+
+        <p class="auth-footer">Don't have an account? <a th:href="@{/signup}">Sign up</a></p>
     </div>
-    <div>
-        <label>Password</label>
-        <input type="password" name="password" required>
-    </div>
-    <button type="submit">Log In</button>
-</form>
-
-<p>Don't have an account? <a th:href="@{/signup}">Sign up</a></p>
+</div>
 </body>
 </html>

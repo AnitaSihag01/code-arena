@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Problems - JudgeBox</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span class="brand">Judge<span>Box</span></span>
+    <div>
+        <a th:href="@{/logout}">Log out</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="hero">
+        <div class="eyebrow">judgebox --list</div>
+        <h1>Problems</h1>
+        <p>Pick one, write your solution, and submit it against hidden test cases.</p>
+    </div>
+
+    <table class="problem-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Difficulty</th>
+            <th>Tags</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="problem : ${problems}">
+            <td>
+                <a th:href="@{/problems/{id}(id=${problem.id})}" th:text="${problem.title}"></a>
+            </td>
+            <td>
+                        <span class="badge"
+                              th:classappend="${problem.difficulty.name() == 'EASY'} ? 'badge-easy' : (${problem.difficulty.name() == 'MEDIUM'} ? 'badge-medium' : 'badge-hard')"
+                              th:text="${problem.difficulty}"></span>
+            </td>
+            <td>
+                <span class="tag" th:each="tag : ${problem.tags}" th:text="${tag}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

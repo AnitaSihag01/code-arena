@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${problem.title}">Problem</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+<div class="navbar">
+    <span class="brand">Judge<span>Box</span></span>
+    <div>
+        <a th:href="@{/problems}">← Problems</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1 th:text="${problem.title}"></h1>
+
+    <div class="problem-meta">
+            <span class="badge"
+                  th:classappend="${problem.difficulty.name() == 'EASY'} ? 'badge-easy' : (${problem.difficulty.name() == 'MEDIUM'} ? 'badge-medium' : 'badge-hard')"
+                  th:text="${problem.difficulty}"></span>
+        <span class="tag" th:each="tag : ${problem.tags}" th:text="${tag}"></span>
+    </div>
+
+    <p class="problem-description" th:text="${problem.description}"></p>
+
+    <h3>Examples</h3>
+    <div class="example-block" th:each="tc : ${sampleTestCases}">
+        <pre th:text="'Input:  ' + ${tc.input}"></pre>
+        <pre th:text="'Output: ' + ${tc.expectedOutput}"></pre>
+    </div>
+
+    <h3>Code</h3>
+    <div id="editor" style="height: 400px;"></div>
+
+    <div class="btn-group">
+        <button id="runBtn" class="btn btn-secondary">Run</button>
+        <button id="submitBtn" class="btn">Submit</button>
+    </div>
+
+    <pre id="result"></pre>
+
+    <textarea id="starterCode" style="display:none;" th:text="${problem.starterCode}"></textarea>
+    <input type="hidden" id="problemId" th:value="${problem.id}">
+</div>
+
+<script src="/js/editor.js"></script>
+</body>
+</html>
