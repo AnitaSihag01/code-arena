@@ -18,9 +18,8 @@ public class CodeRunner {
         File tempDir = null;
         try {
             tempDir = Files.createTempDirectory("submission-" + UUID.randomUUID()).toFile();
-
-            writeFile(tempDir, "Solution.java", solutionCode);
-            writeFile(tempDir, "Main.java", mainCode);
+            String fullSolutionCode = "import java.util.*;\n\n" + solutionCode;
+            writeFile(tempDir, "Solution.java", fullSolutionCode);  writeFile(tempDir, "Main.java", mainCode);
 
             RunResult compileResult = runInContainer(tempDir, "javac Solution.java Main.java", null);
             if (compileResult.exitCode() != 0) {
@@ -59,18 +58,37 @@ public class CodeRunner {
             process.getOutputStream().close();
         }
 
-        String stdout = new String(process.getInputStream().readAllBytes());
-        String stderr = new String(process.getErrorStream().readAllBytes());
+
+        StringBuilder stdoutBuilder = new StringBuilder();
+        StringBuilder stderrBuilder = new StringBuilder();
+
+        Thread outThread = new Thread(() -> {
+            try {
+                stdoutBuilder.append(new String(process.getInputStream().readAllBytes()));
+            } catch (Exception ignored) {}
+        });
+        Thread errThread = new Thread(() -> {
+            try {
+                stderrBuilder.append(new String(process.getErrorStream().readAllBytes()));
+            } catch (Exception ignored) {}
+        });
+
+        outThread.start();
+        errThread.start();
 
         boolean finished = process.waitFor(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+
         if (!finished) {
             process.destroyForcibly();
-            return new RunResult(-1, stdout, "Time limit exceeded", true);
+            return new RunResult(-1, "", "Time limit exceeded", true);
         }
 
-        return new RunResult(process.exitValue(), stdout, stderr, false);
-    }
 
+        outThread.join(1000);
+        errThread.join(1000);
+
+        return new RunResult(process.exitValue(), stdoutBuilder.toString(), stderrBuilder.toString(), false);
+    }
     private void writeFile(File dir, String filename, String content) throws Exception {
         try (FileWriter writer = new FileWriter(new File(dir, filename))) {
             writer.write(content);

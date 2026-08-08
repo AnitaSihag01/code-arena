@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - CodeArena</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="navbar">
+    <span class="brand">Code<span>Arena</span></span>
+    <div>
+        <a th:href="@{/problems}">Problems</a>
+        <a th:href="@{/logout}">Log out</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="hero">
+        <div class="eyebrow">codearena --whoami</div>
+        <h1 th:text="${username}"></h1>
+        <p th:text="'Solved ' + ${totalSolved} + ' of ' + ${totalProblems} + ' problems'"></p>
+    </div>
+
+    <h3>By Difficulty</h3>
+    <div class="card" style="display: flex; gap: 30px;">
+        <div>
+            <span class="badge badge-easy" th:text="'Easy: ' + ${easySolved}"></span>
+        </div>
+        <div>
+            <span class="badge badge-medium" th:text="'Medium: ' + ${mediumSolved}"></span>
+        </div>
+        <div>
+            <span class="badge badge-hard" th:text="'Hard: ' + ${hardSolved}"></span>
+        </div>
+    </div>
+
+    <h3>Recent Submissions</h3>
+    <table class="problem-table">
+        <thead>
+        <tr>
+            <th>Problem</th>
+            <th>Verdict</th>
+            <th>When</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="sub : ${recentSubmissions}">
+            <td th:text="${sub.problem.title}"></td>
+            <td th:text="${sub.verdict}"></td>
+            <td th:text="${sub.submittedAt}"></td>
+        </tr>
+        <tr th:if="${recentSubmissions.isEmpty()}">
+            <td colspan="3">No submissions yet — go solve something!</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
