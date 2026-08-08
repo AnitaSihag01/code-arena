@@ -15,7 +15,7 @@ Most beginner projects are CRUD apps. I wanted to build something with a genuine
 
 ## Architecture
 
-![Architecture diagram](docs/architecture.png)
+![Architecture diagram](docs/codearena_submission_flow.png)
 
 **Request flow for a submission:**
 1. User writes code in the Monaco editor and clicks Submit
